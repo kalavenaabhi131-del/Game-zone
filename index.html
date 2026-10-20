@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PythonPath | Learn Python</title>
+<style>
+:root {
+  --bg:#f3f6fb; --card:#ffffff; --text:#172033;
+  --blue:#2563eb; --muted:#64748b; --code:#101827;
+}
+body.dark {
+  --bg:#0f172a; --card:#1e293b; --text:#f1f5f9;
+  --blue:#60a5fa; --muted:#cbd5e1; --code:#020617;
+}
+* {box-sizing:border-box}
+body {
+  margin:0; font-family:Arial,sans-serif;
+  background:var(--bg); color:var(--text);
+  line-height:1.6; transition:.2s;
+}
+header {
+  padding:26px 16px; text-align:center;
+  color:white; background:linear-gradient(120deg,#142238,#2563eb);
+}
+header h1 {margin:0;font-size:34px}
+header p {margin:5px 0 16px}
+nav {
+  display:flex; flex-wrap:wrap; gap:8px;
+  justify-content:center; padding:12px;
+  background:var(--card); position:sticky; top:0; z-index:2;
+}
+nav a {
+  text-decoration:none; color:var(--text);
+  padding:7px 10px; border-radius:7px;
+}
+nav a:hover {background:var(--bg)}
+button,select {
+  border:0; border-radius:8px; padding:11px 14px;
+  cursor:pointer; font-size:15px;
+}
+button {background:var(--blue);color:white}
+button:disabled {opacity:.5;cursor:not-allowed}
+main {max-width:950px;margin:auto;padding:16px}
+.card {
+  background:var(--card); padding:20px; border-radius:15px;
+  margin-bottom:18px; box-shadow:0 3px 14px #0000000d;
+  scroll-margin-top:90px;
+}
+h2 {margin-top:0;color:var(--blue)}
+h3 {margin-bottom:5px}
+.muted {color:var(--muted)}
+.grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.stat {padding:15px;border-radius:10px;background:var(--bg)}
+.stat strong {display:block;font-size:24px}
+pre,textarea {
+  background:var(--code);color:#b9f6ca;
+  border:0;border-radius:9px;padding:15px;
+  width:100%;overflow:auto;font:14px/1.6 monospace;
+}
+textarea {min-height:120px;resize:vertical}
+.lesson {border-top:1px solid var(--bg);padding:12px 0}
+.lesson button {margin-top:5px}
+.pill {font-size:12px;background:var(--bg);padding:4px 8px;border-radius:20px}
+.progress {height:12px;background:var(--bg);border-radius:10px;overflow:hidden}
+#progressBar {height:100%;width:0;background:#22c55e;transition:.3s}
+.option {
+  display:block;width:100%;text-align:left;margin:8px 0;
+  background:var(--bg);color:var(--text);border:1px solid #94a3b844;
+}
+.option:hover {border-color:var(--blue)}
+#feedback,#practiceOutput {white-space:pre-wrap;overflow-wrap:anywhere}
+footer {text-align:center;padding:24px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🐍 PythonPath</h1>
+  <p>Learn Python from Zero to Advanced</p>
+  <button onclick="document.body.classList.toggle('dark')">
+    🌙 Toggle dark mode
+  </button>
+</header>
+
+<nav>
+  <a href="#home">Home</a>
+  <a href="#lessons">Lessons</a>
+  <a href="#examples">Examples</a>
+  <a href="#practice">Practice</a>
+  <a href="#quiz">Quiz</a>
+  <a href="#progress">My progress</a>
+</nav>
+
+<main>
+<section id="home" class="card">
+  <h2>Welcome, Python learner! 🚀</h2>
+  <p>Learn programming one small step at a time. Read a lesson,
+  study the code, practise, and take the quiz.</p>
+  <div class="grid">
+    <div class="stat"><strong id="totalLessons">12</strong>Lessons</div>
+    <div class="stat"><strong id="doneCount">0</strong>Completed</div>
+    <div class="stat"><strong id="bestScore">0</strong>Best quiz score</div>
+  </div>
+  <p class="muted">Your progress is stored in this browser on this device.</p>
+</section>
+
+<section id="lessons" class="card">
+  <h2>📚 Python lessons</h2>
+  <p class="muted">Start at Lesson 1. Mark a lesson complete when you understand it.</p>
+  <div id="lessonList"></div>
+</section>
+
+<section id="examples" class="card">
+  <h2>💻 Code examples</h2>
+  <label for="exampleChoice">Choose an example:</label>
+  <select id="exampleChoice" onchange="showExample()">
+    <option value="0">Hello World</option>
+    <option value="1">Variables and maths</option>
+    <option value="2">If and else</option>
+    <option value="3">For loop</option>
+    <option value="4">Function</option>
+    <option value="5">List</option>
+    <option value="6">Dictionary</option>
+  </select>
+  <pre id="exampleCode"></pre>
+  <p id="exampleExplain"></p>
+  <button onclick="copyExample()">Copy code</button>
+  <p id="copyMessage" class="muted"></p>
+</section>
+
+<section id="practice" class="card">
+  <h2>🧪 Coding practice</h2>
+  <p>Choose a practice task, write your answer, and check it.
+  This beginner practice checker checks your code against a task;
+  it is not a full Python interpreter.</p>
+  <label for="taskChoice">Practice task:</label>
+  <select id="taskChoice" onchange="loadTask()">
+    <option value="0">Print Hello World</option>
+    <option value="1">Add two numbers</option>
+    <option value="2">Create a variable named age</option>
+    <option value="3">Write a for loop</option>
+  </select>
+  <p id="taskPrompt"></p>
+  <textarea id="userCode" spellcheck="false"
+    aria-label="Write your Python code"
+    placeholder="Write your Python code here..."></textarea>
+  <p>
+    <button onclick="checkPractice()">Check answer</button>
+    <button onclick="showHint()">Show hint</button>
+  </p>
+  <p id="hint" class="muted"></p>
+  <div id="practiceOutput"></div>
+</section>
+
+<section id="quiz" class="card">
+  <h2>🧠 Python quiz</h2>
+  <p id="quizNumber"></p>
+  <h3 id="quizQuestion"></h3>
+  <div id="quizOptions"></div>
+  <p id="feedback"></p>
+  <button id="nextBtn" onclick="nextQuestion()" disabled>
+    Next question →
+  </button>
+  <p id="quizScore" class="muted"></p>
+</section>
+
+<section id="progress" class="card">
+  <h2>📈 My learning progress</h2>
+  <p id="progressText">You have completed 0 of 12 lessons.</p>
+  <div class="progress"><div id="progressBar"></div></div>
+  <p id="progressDetails" class="muted"></p>
+  <button onclick="resetProgress()">Reset all progress</button>
+  <p class="muted">Resetting removes saved lesson and quiz progress from this browser.</p>
+</section>
+</main>
+
+<footer>
+  <strong>PythonPath</strong>
+  <p>Learn a little. Practise a little. Keep going! 🐍</p>
+</footer>
+
+<script>
+const lessons = [
+ {title:"1. Your first Python program",level:"Beginner",
+  body:"Python is a programming language. The print() function displays information.",
+  code:'print("Hello World!")',
+  tip:"Text inside quotes is called a string."},
+ {title:"2. Variables and data types",level:"Beginner",
+  body:"Variables store values. Common types include strings, integers, floats and booleans.",
+  code:'name = "Ravi"\\nage = 15\\nheight = 1.6\\nlearning = True\\nprint(name, age)',
+  tip:"Use type(value) to check a value's type."},
+ {title:"3. Getting user input",level:"Beginner",
+  body:"input() reads text typed by a user. Convert it to int() if you need a whole number.",
+  code:'name = input("Your name: ")\\nprint("Hello", name)',
+  tip:"input() returns a string, even when the user types digits."},
+ {title:"4. Operators",level:"Beginner",
+  body:"Use +, -, *, /, //, %, and ** for arithmetic.",
+  code:'print(10 + 3)\\nprint(10 // 3)\\nprint(10 % 3)\\nprint(2 ** 3)',
+  tip:"The % operator gives the remainder."},
+ {title:"5. If and else",level:"Beginner",
+  body:"Conditions allow a program to make decisions. Remember the colon and indentation.",
+  code:'age = 18\\nif age >= 18:\\n    print("Adult")\\nelse:\\n    print("Under 18")',
+  tip:"Comparison operators include ==, !=, <, >, <= and >=."},
+ {title:"6. For and while loops",level:"Beginner",
+  body:"Loops repeat instructions. range(5) produces numbers from 0 through 4.",
+  code:'for number in range(5):\\n    print(number)',
+  tip:"Indent the statements that belong inside a loop."},
+ {title:"7. Lists",level:"Intermediate",
+  body:"Lists store multiple values in order. Indexing starts at zero.",
+  code:'fruits = ["apple", "mango", "grape"]\\nprint(fruits[0])\\nfruits.append("orange")\\nprint(fruits)',
+  tip:"Use len(fruits) to count list items."},
+ {title:"8. Functions",level:"Intermediate",
+  body:"Functions group reusable code. Parameters receive values and return sends a result back.",
+  code:'def add(a, b):\\n    return a + b\\n\\nanswer = add(4, 6)\\nprint(answer)',
+  tip:"A function begins with def and a colon."},
+ {title:"9. Dictionaries",level:"Intermediate",
+  body:"Dictionaries store key-value pairs. Access a value using its key.",
+  code:'student = {"name": "Ravi", "score": 90}\\nprint(student["name"])\\nprint(student["score"])',
+  tip:"Keys must match the keys stored in the dictionary."},
+ {title:"10. Error handling",level:"Intermediate",
+  body:"try and except let you handle certain errors without stopping unexpectedly.",
+  code:'try:\\n    number = int(input("Number: "))\\n    print(100 / number)\\nexcept ValueError:\\n    print("Enter a whole number")\\nexcept ZeroDivisionError:\\n    print("Cannot divide by zero")',
+  tip:"Handle the specific errors your program can reasonably encounter."},
+ {title:"11. Files",level:"Advanced",
+  body:"Use with open() to work with files. This example writes text to a file.",
+  code:'with open("notes.txt", "w") as file:\\n    file.write("Learning Python!")',
+  tip:"Mode w writes and replaces existing content; mode a appends."},
+ {title:"12. Classes and objects",level:"Advanced",
+  body:"Classes define a type of object. __init__ sets up an instance.",
+  code:'class Dog:\\n    def __init__(self, name):\\n        self.name = name\\n\\n    def speak(self):\\n        return "Woof!"\\n\\npet = Dog("Buddy")\\nprint(pet.name)\\nprint(pet.speak())',
+  tip:"self refers to the current instance."}
+];
+
+const examples = [
+ {code:'print("Hello World!")',explain:"Displays the text Hello World!"},
+ {code:'a = 10\\nb = 20\\nprint(a + b)',explain:"Stores two numbers and prints their sum: 30."},
+ {code:'marks = 75\\nif marks >= 35:\\n    print("Pass")\\nelse:\\n    print("Try again")',explain:"The program chooses an output based on the condition."},
+ {code:'for i in range(1, 6):\\n    print(i)',explain:"Prints numbers from 1 to 5."},
+ {code:'def square(n):\\n    return n * n\\n\\nprint(square(4))',explain:"Calls a function that returns 16."},
+ {code:'colours = ["red", "blue"]\\ncolours.append("green")\\nprint(colours)',explain:"Adds a new item to a list."},
+ {code:'person = {"name": "Maya", "age": 16}\\nprint(person["name"])',explain:"Looks up a value using its key."}
+];
+
+const tasks = [
+ {prompt:'Write code that prints Hello World!',
+  hint:'Use the print() function and quotation marks.',
+  test:c=>/print\\s*\\(\\s*["']Hello World!["']\\s*\\)/.test(c),
+  answer:'print("Hello World!")'},
+ {prompt:'Create a and b, then print their sum. Use a = 2 and b = 3.',
+  hint:'Assign both variables, then use print(a + b).',
+  test:c=>/a\\s*=\\s*2/.test(c)&&/b\\s*=\\s*3/.test(c)&&/print\\s*\\(\\s*a\\s*\\+\\s*b\\s*\\)/.test(c),
+  answer:'a = 2\\nb = 3\\nprint(a + b)'},
+ {prompt:'Create a variable named age and assign it the number 15.',
+  hint:'Write the variable name, an equals sign, and the number.',
+  test:c=>/\\bage\\s*=\\s*15\\b/.test(c),
+  answer:'age = 15'},
+ {prompt:'Write a for loop that prints each number from 0 to 4.',
+  hint:'Try range(5) and indent the print statement.',
+  test:c=>/for\\s+\\w+\\s+in\\s+range\\s*\\(\\s*5\\s*\\)\\s*:/.test(c)&&/print\\s*\\(/.test(c),
+  answer:'for i in range(5):\\n    print(i)'}
+];
+
+const questions = [
+ {q:'Which function displays a message?',a:['input()','print()','type()','len()'],correct:1,why:'print() displays information on the screen.'},
+ {q:'What is the result of 7 * 6?',a:['13','42','76','36'],correct:1,why:'Multiplication gives 7 × 6 = 42.'},
+ {q:'Which data type represents True or False?',a:['str','int','bool','list'],correct:2,why:'bool is Python’s Boolean data type.'},
+ {q:'What does len("Python") return?',a:['5','6','7','Python'],correct:1,why:'Python has six characters.'},
+ {q:'Which keyword defines a function?',a:['func','function','def','make'],correct:2,why:'Python uses def to define functions.'},
+ {q:'What does range(3) produce when iterated?',a:['1, 2, 3','0, 1, 2','0, 1, 2, 3','3 only'],correct:1,why:'range(3) starts at zero and stops before three.'},
+ {q:'Which brackets are used for a Python list?',a:['{}','()','[]','<>'],correct:2,why:'Lists are written with square brackets.'},
+ {q:'Which operator checks equality?',a:['=','==','!=','>='],correct:1,why:'== compares two values; = assigns a value.'},
+ {q:'What does a dictionary store?',a:['Only numbers','Key-value pairs','Only strings','Only functions'],correct:1,why:'A dictionary maps keys to values.'},
+ {q:'Which block can handle an exception?',a:['except','repeat','then','define'],correct:0,why:'except handles a matching exception raised in a try block.'}
+];
+
+function getSaved(key, fallback) {
+  try {
+    const value = localStorage.getItem(key);
+    return value === null ? fallback : JSON.parse(value);
+  } catch(e) { return fallback; }
+}
+function save(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); }
+  catch(e) {}
+}
+let completed = getSaved("pythonpathCompleted", []);
+let best = getSaved("pythonpathBest", 0);
+let qIndex = 0, score = 0, locked = false;
+
+function renderLessons() {
+  const area = document.getElementById("lessonList");
+  area.innerHTML = "";
+  lessons.forEach((lesson, i) => {
+    const div = document.createElement("div");
+    div.className = "lesson";
+    const title = document.createElement("h3");
+    title.textContent = lesson.title + " ";
+    const pill = document.createElement("span");
+    pill.className = "pill";
+    pill.textContent = lesson.level;
+    title.appendChild(pill);
+    const p = document.createElement("p");
+    p.textContent = lesson.body;
+    const pre = document.createElement("pre");
+    pre.textContent = lesson.code;
+    const tip = document.createElement("p");
+    tip.className = "muted";
+    tip.textContent = "Tip: " + lesson.tip;
+    const btn = document.createElement("button");
+    btn.textContent = completed.includes(i) ? "✓ Completed" : "Mark complete";
+    btn.onclick = () => {
+      if (completed.includes(i)) {
+        completed = completed.filter(n => n !== i);
+      } else {
+        completed.push(i);
+      }
+      save("pythonpathCompleted", completed);
+      renderLessons();
+      updateProgress();
+    };
+    div.append(title, p, pre, tip, btn);
+    area.appendChild(div);
+  });
+}
+
+function updateProgress() {
+  document.getElementById("totalLessons").textContent = lessons.length;
+  document.getElementById("doneCount").textContent = completed.length;
+  document.getElementById("bestScore").textContent = best + "/" + questions.length;
+  document.getElementById("progressText").textContent =
+    "You have completed " + completed.length + " of " + lessons.length + " lessons.";
+  document.getElementById("progressBar").style.width =
+    (completed.length / lessons.length * 100) + "%";
+  document.getElementById("progressDetails").textContent =
+    "Lessons completed: " + Math.round(completed.length / lessons.length * 100) +
+    "%. Best quiz result: " + best + " out of " + questions.length + ".";
+}
+
+function showExample() {
+  const item = examples[Number(document.getElementById("exampleChoice").value)];
+  document.getElementById("exampleCode").textContent = item.code;
+  document.getElementById("exampleExplain").textContent = item.explain;
+  document.getElementById("copyMessage").textContent = "";
+}
+async function copyExample() {
+  const code = document.getElementById("exampleCode").textContent;
+  try {
+    await navigator.clipboard.writeText(code);
+    document.getElementById("copyMessage").textContent = "Code copied!";
+  } catch(e) {
+    document.getElementById("copyMessage").textContent =
+      "Select the code above and copy it manually.";
+  }
+}
+
+function loadTask() {
+  const task = tasks[Number(document.getElementById("taskChoice").value)];
+  document.getElementById("taskPrompt").textContent = task.prompt;
+  document.getElementById("hint").textContent = "";
+  document.getElementById("practiceOutput").textContent = "";
+  document.getElementById("userCode").value = "";
+}
+function showHint() {
+  document.getElementById("hint").textContent =
+    "Hint: " + tasks[Number(document.getElementById("taskChoice").value)].hint;
+}
+function checkPractice() {
+  const task = tasks[Number(document.getElementById("taskChoice").value)];
+  const code = document.getElementById("userCode").value;
+  const out = document.getElementById("practiceOutput");
+  if (task.test(code)) {
+    out.textContent = "✅ Looks good! Your answer matches this task.";
+    out.style.color = "#16a34a";
+  } else {
+    out.textContent = "Not quite yet. Check the task and try again. Example solution:\\n" + task.answer;
+    out.style.color = "#dc2626";
+  }
+}
+
+function loadQuestion() {
+  locked = false;
+  const item = questions[qIndex];
+  document.getElementById("quizNumber").textContent =
+    "Question " + (qIndex + 1) + " of " + questions.length;
+  document.getElementById("quizQuestion").textContent = item.q;
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("nextBtn").disabled = true;
+  document.getElementById("nextBtn").textContent =
+    qIndex === questions.length - 1 ? "Finish quiz" : "Next question →";
+  const area = document.getElementById("quizOptions");
+  area.innerHTML = "";
+  item.a.forEach((answer, i) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.textContent = String.fromCharCode(65 + i) + ". " + answer;
+    btn.onclick = () => answerQuestion(i);
+    area.appendChild(btn);
+  });
+  document.getElementById("quizScore").textContent = "Current score: " + score;
+}
+function answerQuestion(choice) {
+  if (locked) return;
+  locked = true;
+  const item = questions[qIndex];
+  if (choice === item.correct) {
+    score++;
+    document.getElementById("feedback").textContent = "✅ Correct! " + item.why;
+  } else {
+    document.getElementById("feedback").textContent =
+      "❌ The answer is " + item.a[item.correct] + ". " + item.why;
+  }
+  document.getElementById("quizScore").textContent =
+    "Current score: " + score + " / " + questions.length;
+  document.getElementById("nextBtn").disabled = false;
+}
+function nextQuestion() {
+  if (!locked) return;
+  if (qIndex < questions.length - 1) {
+    qIndex++;
+    loadQuestion();
+  } else {
+    best = Math.max(best, score);
+    save("pythonpathBest", best);
+    updateProgress();
+    document.getElementById("quizNumber").textContent = "Quiz complete!";
+    document.getElementById("quizQuestion").textContent =
+      "You scored " + score + " out of " + questions.length + ".";
+    document.getElementById("quizOptions").innerHTML = "";
+    document.getElementById("feedback").textContent =
+      score === questions.length ? "Excellent work! 🎉" :
+      "Keep practising. Review your lessons and try again.";
+    document.getElementById("nextBtn").textContent = "Try again";
+    document.getElementById("nextBtn").disabled = false;
+    document.getElementById("nextBtn").onclick = restartQuiz;
+  }
+}
+function restartQuiz() {
+  qIndex = 0;
+  score = 0;
+  document.getElementById("nextBtn").onclick = nextQuestion;
+  loadQuestion();
+}
+function resetProgress() {
+  if (!confirm("Reset your lesson progress and best quiz score?")) return;
+  completed = [];
+  best = 0;
+  save("pythonpathCompleted", completed);
+  save("pythonpathBest", best);
+  renderLessons();
+  updateProgress();
+}
+
+renderLessons();
+showExample();
+loadTask();
+loadQuestion();
+updateProgress();
+</script>
+</body>
+</html>
